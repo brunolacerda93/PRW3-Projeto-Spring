@@ -2,6 +2,7 @@ package br.pw3.sistema.veiculos.PRW3_Projeto_Spring.controller;
 
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.conserto.Conserto;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.AtualizaConsertoDTO;
+import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.AtualizaConsertoEspecificoDTO;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.CadastroConsertoDTO;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.DetalhaConsertoDTO;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.ListaConsertoDTO;
@@ -31,11 +32,19 @@ public class ConsertoController {
     @Autowired
     private ConsertoRepository repository;
 
-    @PutMapping
+    @PutMapping("atualizar")
     @Transactional
     public ResponseEntity atualizar(@RequestBody @Valid AtualizaConsertoDTO dados) {
         Conserto conserto = repository.getReferenceById(dados.id());
         conserto.atualizar(dados);
+        return ResponseEntity.ok(new DetalhaConsertoDTO(conserto));
+    }
+
+    @PutMapping("atualizarespecifico")
+    @Transactional
+    public ResponseEntity atualizarEspecifico(@RequestBody @Valid AtualizaConsertoEspecificoDTO dados) {
+        Conserto conserto = repository.getReferenceById(dados.id());
+        conserto.atualizarEspecifico(dados);
         return ResponseEntity.ok(new DetalhaConsertoDTO(conserto));
     }
 
@@ -54,7 +63,7 @@ public class ConsertoController {
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
         Conserto conserto = repository.getReferenceById(id);
-        // conserto.excluir();
+        conserto.excluir();
         return ResponseEntity.noContent().build();
     }
 
@@ -69,12 +78,12 @@ public class ConsertoController {
 
     @GetMapping("listartodos")
     public ResponseEntity listar(Pageable pageable) {
-        return ResponseEntity.ok(repository.findAll(pageable).stream().map(DetalhaConsertoDTO::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(repository.findAllByAtivoTrue(pageable).stream().map(DetalhaConsertoDTO::new).collect(Collectors.toList()));
     }
 
     @GetMapping("listartodosresumo")
     public ResponseEntity listarResumo() {
-        return ResponseEntity.ok(repository.findAll().stream().map(ListaConsertoDTO::new).collect(Collectors.toList()));
+        return ResponseEntity.ok(repository.findAllByAtivoTrue().stream().map(ListaConsertoDTO::new).collect(Collectors.toList()));
     }
 
 }

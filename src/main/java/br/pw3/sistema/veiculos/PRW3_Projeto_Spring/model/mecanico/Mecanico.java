@@ -15,6 +15,14 @@ public class Mecanico {
     private String nome;
     private String anosDeExperiencia;
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAnosDeExperiencia(String anosDeExperiencia) {
+        this.anosDeExperiencia = anosDeExperiencia;
+    }
+
     public Mecanico(MecanicoDTO dados) {
         this.nome = dados.nome();
         this.anosDeExperiencia = dados.anosDeExperiencia();

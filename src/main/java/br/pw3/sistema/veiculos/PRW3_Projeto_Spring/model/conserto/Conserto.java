@@ -1,6 +1,7 @@
 package br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.conserto;
 
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.AtualizaConsertoDTO;
+import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.AtualizaConsertoEspecificoDTO;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.dto.CadastroConsertoDTO;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.mecanico.Mecanico;
 import br.pw3.sistema.veiculos.PRW3_Projeto_Spring.model.veiculo.Veiculo;
@@ -34,7 +35,10 @@ public class Conserto {
     @Embedded
     private Veiculo veiculo;
 
+    private boolean ativo;
+
     public Conserto(CadastroConsertoDTO dados) {
+        this.ativo = true;
         this.dataEntrada = dados.dataEntrada();
         this.dataSaida = dados.dataSaida();
         this.responsavel = new Mecanico(dados.responsavel());
@@ -58,5 +62,23 @@ public class Conserto {
         if (dados.veiculo() != null) {
             this.veiculo.atualizar(dados.veiculo());
         }
+    }
+
+    public void atualizarEspecifico(AtualizaConsertoEspecificoDTO dados) {
+        if (dados.dataSaida() != null) {
+            this.dataSaida = dados.dataSaida();
+        }
+
+        if (dados.nomeMecanico() != null) {
+            this.responsavel.setNome(dados.nomeMecanico());
+        }
+
+        if (dados.anosExperienciaMecanico() != null) {
+            this.responsavel.setAnosDeExperiencia(dados.anosExperienciaMecanico());
+        }
+    }
+
+    public void excluir() {
+        this.ativo = false;
     }
 }
